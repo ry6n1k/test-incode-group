@@ -23,9 +23,9 @@ export class User {
   @Column()
   password: string;
 
-  // @ManyToOne(() => Role)
-  // @JoinColumn({ name: 'roleId' })
-  // roleId: Role;
+  @ManyToOne(() => Role)
+  @JoinColumn({ name: 'roleId' })
+  roleId: Role;
 
   // @ManyToOne(() => User)
   // @JoinColumn({name: "bossId"})
@@ -35,5 +35,5 @@ export class User {
   children: User[];
 
   @TreeParent()
- parent: User;
+  parent: User;
 }
