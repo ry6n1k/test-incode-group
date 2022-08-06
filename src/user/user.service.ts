@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Payload } from 'src/auth/payload';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User } from './user';
 import { RegisterDTO } from './register.dto';
 import { LoginDTO } from 'src/auth/login.dto';
 
@@ -11,6 +11,10 @@ export class UserService {
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
   ) {}
+
+  /*=============================================
+  =            Authentication User              =
+  =============================================*/
 
   async create(registerDTO: RegisterDTO): Promise<User> {
     const { username } = registerDTO;
@@ -39,5 +43,29 @@ export class UserService {
     } else {
       throw new HttpException('invalid credential', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  /*=============================================
+  =            Return list of Users             =
+  =============================================*/
+
+  async getListUsers(): Promise<User[]> {
+    return await this.userRepository.find({
+      select: {
+        username: true,
+        roleId: true,
+        bossId: true,
+      },
+      relations: {
+        bossId: true,
+      },
+    });
+  }
+
+  async getBoss(username: string): Promise<User[]> {
+    return await this.userRepository.find({
+      where: { username },
+      relations: { bossId: true },
+    });
   }
 }
