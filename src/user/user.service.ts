@@ -1,30 +1,32 @@
+import { AppDataSource } from '../data-source';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Payload } from 'src/auth/payload';
-import { Repository } from 'typeorm';
-import { User } from './user';
 import { RegisterDTO } from './register.dto';
 import { LoginDTO } from 'src/auth/login.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @Inject('USER_REPOSITORY')
-    private userRepository: Repository<User>,
-  ) {}
+  userRepository = AppDataSource.getTreeRepository(User);
 
   /*=============================================
   =            Authentication User              =
   =============================================*/
 
-  async create(registerDTO: RegisterDTO): Promise<User> {
+  async create(registerDTO: RegisterDTO) {
     const { username } = registerDTO;
-    const user = await this.userRepository.findOne({ where: { username } });
+    const user = await this.userRepository.findOneBy({
+      username: username,
+    });
     if (user) {
       throw new HttpException('user already exists', HttpStatus.BAD_REQUEST);
     }
-    const createdUser = this.userRepository.create(registerDTO);
-    await this.userRepository.save(createdUser);
-    return createdUser;
+    const boss = await this.userRepository.findOneBy({ id: registerDTO.boss });
+    const newUser = new User();
+    newUser.username = registerDTO.username;
+    newUser.password = registerDTO.password;
+    newUser.boss = boss;
+    return await AppDataSource.manager.save(newUser);
   }
 
   async findByPayload(payload: Payload) {
@@ -50,22 +52,15 @@ export class UserService {
   =============================================*/
 
   async getListUsers(): Promise<User[]> {
-    return await this.userRepository.find({
-      select: {
-        username: true,
-        roleId: true,
-        bossId: true,
-      },
-      relations: {
-        bossId: true,
-      },
-    });
+    const users = await AppDataSource.manager
+      .getTreeRepository(User)
+      .findTrees();
+    return users;
   }
 
-  async getBoss(username: string): Promise<User[]> {
-    return await this.userRepository.find({
-      where: { username },
-      relations: { bossId: true },
-    });
+  async getBoss(id: number): Promise<User[]> {
+    const boss = await this.userRepository.findOneBy({ id: id });
+    const users = await this.userRepository.findDescendants(boss);
+    return users;
   }
 }

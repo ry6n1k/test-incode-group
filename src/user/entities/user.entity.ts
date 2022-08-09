@@ -2,14 +2,11 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinTable,
-  JoinColumn,
   Tree,
   TreeChildren,
   TreeParent,
 } from 'typeorm';
-import { Role } from './../../role/role.entity';
+//import { Role } from './../../role/role.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -23,17 +20,13 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToOne(() => Role)
-  @JoinColumn({ name: 'roleId' })
-  roleId: Role;
-
-  // @ManyToOne(() => User)
-  // @JoinColumn({name: "bossId"})
-  // bossId: User;
+  // @ManyToOne(() => Role)
+  // @JoinColumn({ name: 'roleId' })
+  // roleId: Role;
 
   @TreeChildren()
-  children: User[];
+  subordinates: User[];
 
   @TreeParent()
-  parent: User;
+  boss: User;
 }
