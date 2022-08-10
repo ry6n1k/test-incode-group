@@ -12,6 +12,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Role],
+  //migrations: [__dirname + "migrations/*{.ts,.js}"]
 });
 
 AppDataSource.initialize();

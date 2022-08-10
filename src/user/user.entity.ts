@@ -17,7 +17,7 @@ export class User {
 
   @ManyToOne(() => Role)
   role: Role;
-  
+
   @Column()
   username: string;
 
