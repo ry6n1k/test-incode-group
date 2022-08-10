@@ -38,6 +38,7 @@ export class UserService {
   async findByUsername(loginDTO: LoginDTO) {
     const { username, password } = loginDTO;
     const user = await this.userRepository.findOne({ where: { username } });
+    console.log(user);
     if (!user) {
       throw new HttpException('user does not exists', HttpStatus.BAD_REQUEST);
     }
@@ -55,13 +56,17 @@ export class UserService {
   async getListUsers(): Promise<User[]> {
     const users = await AppDataSource.manager
       .getTreeRepository(User)
-      .findTrees();
+      .findTrees({
+        relations: ['role'],
+      });
     return users;
   }
 
   async getBoss(id: number): Promise<User[]> {
     const boss = await this.userRepository.findOneBy({ id: id });
-    const users = await this.userRepository.findDescendants(boss);
+    const users = await this.userRepository.findDescendants(boss, {
+      relations: ['role'],
+    });
     return users;
   }
 }

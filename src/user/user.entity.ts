@@ -16,15 +16,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ManyToOne(() => Role)
+  //@JoinColumn({ name: 'roleId' })
+  role: Role;
+  
   @Column()
   username: string;
 
   @Column()
   password: string;
-
-  @ManyToOne(() => Role)
-  @JoinColumn({ name: 'roleId' })
-  role: Role;
 
   @TreeChildren()
   subordinates: User[];
