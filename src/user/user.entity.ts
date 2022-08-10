@@ -5,10 +5,9 @@ import {
   Tree,
   TreeChildren,
   TreeParent,
-  JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { Role } from '../role/role.entity';
+import { Role } from './role.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -17,7 +16,6 @@ export class User {
   id: number;
 
   @ManyToOne(() => Role)
-  //@JoinColumn({ name: 'roleId' })
   role: Role;
   
   @Column()

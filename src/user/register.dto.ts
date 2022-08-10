@@ -1,4 +1,4 @@
-import { Role } from 'src/role/role.entity';
+import { Role } from './role.entity';
 import { User } from './user.entity';
 
 export interface RegisterDTO {

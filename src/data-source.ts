@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Role } from 'src/role/role.entity';
+import { Role } from 'src/user/role.entity';
 import { User } from 'src/user/user.entity';
 
 export const AppDataSource = new DataSource({
