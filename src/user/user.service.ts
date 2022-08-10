@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Payload } from 'src/auth/payload';
 import { RegisterDTO } from './register.dto';
 import { LoginDTO } from 'src/auth/login.dto';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -25,6 +25,7 @@ export class UserService {
     const newUser = new User();
     newUser.username = registerDTO.username;
     newUser.password = registerDTO.password;
+    newUser.role = registerDTO.role;
     newUser.boss = boss;
     return await AppDataSource.manager.save(newUser);
   }
