@@ -1,8 +1,9 @@
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AppDataSource } from '../data-source';
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Payload } from 'src/auth/payload';
 import { RegisterDTO } from './register.dto';
 import { LoginDTO } from 'src/auth/login.dto';
+import { UpdateDTO } from './update.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -52,6 +53,10 @@ export class UserService {
   =            Return list of Users             =
   =============================================*/
 
+  async list(): Promise<User[]> {
+    return await this.userRepository.findTrees();
+  }
+
   async getBoss(id: number): Promise<User[]> {
     const boss = await this.userRepository.findOne({
       relations: ['role'],
@@ -64,5 +69,16 @@ export class UserService {
         relations: ['role'],
       });
     }
+  }
+
+  async updateBoss(id: number, updateDTO: UpdateDTO) {
+    const boss = await this.userRepository.findOneBy({ id: updateDTO.boss });
+    return await AppDataSource.createQueryBuilder()
+      .update(User)
+      .where({ id: id })
+      .set({
+        boss: boss,
+      })
+      .execute();
   }
 }

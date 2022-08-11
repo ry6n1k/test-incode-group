@@ -1,16 +1,19 @@
-import { AuthGuard } from '@nestjs/passport';
 import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { RegisterDTO } from 'src/user/register.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RegisterDTO } from 'src/user/register.dto';
 import { LoginDTO } from './login.dto';
+import { UpdateDTO } from '../user/update.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -39,5 +42,11 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async auth(@Request() req) {
     return await this.userService.getBoss(req.user.id);
+  }
+
+  @Put('update/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async update(@Param('id') id: number, @Body() updateDTO: UpdateDTO) {
+    return await this.userService.updateBoss(id, updateDTO);
   }
 }

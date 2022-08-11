@@ -28,12 +28,18 @@ params (username, password)
 
 ### list users
 
+`/list` -- GET request.
+
+gets all users as a nested list.
+
+### auth list
+
 when the user is logged in, he is given a token,
 
-`/auth/profile` - GET request only for authorized users:
+`/auth/profile` -- GET request only for authorized users:
 
-if user is admin - gets all users as a nested list.
+if user is admin -- gets all users as a nested list.
 
-if user is boss - get list of all subordinate users.
+if user is boss -- get list of all subordinate users.
 
-if regular user - get information only about itself.
+if regular user -- get information only about itself.
