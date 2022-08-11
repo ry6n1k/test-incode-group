@@ -43,3 +43,11 @@ if user is admin -- gets all users as a nested list.
 if user is boss -- get list of all subordinate users.
 
 if regular user -- get information only about itself.
+
+### update bossId for user
+
+`/auth/update/:id` -- PUT request, params:
+
+id -- user, change the boss
+
+bossId -- new boss for user
