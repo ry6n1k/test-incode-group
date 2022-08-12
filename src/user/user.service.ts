@@ -54,7 +54,9 @@ export class UserService {
   =============================================*/
 
   async list(): Promise<User[]> {
-    return await this.userRepository.findTrees();
+    return await this.userRepository.findTrees({
+      relations: ['role'],
+    });
   }
 
   async getBoss(id: number): Promise<User[]> {
